@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import org.eclipse.jetty.security.IdentityService;
-import org.eclipse.jetty.security.JDBCLoginService;
 import org.eclipse.jetty.security.MappedLoginService;
 import org.eclipse.jetty.server.UserIdentity;
 import org.eclipse.jetty.util.Loader;
@@ -34,6 +33,7 @@ public final class kfsJDBCLoginService extends MappedLoginService {
     private String _password;
     private String _userTableKey;
     private String _userTablePasswordField;
+    private String _userTablePasswordFieldPrefix;
     private String _roleTableRoleField;
     private int _cacheTime;
     private long _lastHashPurge;
@@ -88,6 +88,7 @@ public final class kfsJDBCLoginService extends MappedLoginService {
         _userTableKey = properties.getProperty("usertablekey");
         String _userTableUserField = properties.getProperty("usertableuserfield");
         _userTablePasswordField = properties.getProperty("usertablepasswordfield");
+        _userTablePasswordFieldPrefix = properties.getProperty("usertablepasswordfieldprefix");
         String _roleTable = properties.getProperty("roletable");
         String _roleTableKey = properties.getProperty("roletablekey");
         _roleTableRoleField = properties.getProperty("roletablerolefield");
@@ -194,12 +195,12 @@ public final class kfsJDBCLoginService extends MappedLoginService {
             ResultSet rs = stat.executeQuery();
 
             if (rs.next()) {
-                String key = rs.getString(_userTableKey);
-                String credentials = rs.getString(_userTablePasswordField);
+                long key = rs.getLong(_userTableKey);
+                String credentials = _userTablePasswordFieldPrefix + rs.getString(_userTablePasswordField);
                 stat.close();
 
                 stat = _con.prepareStatement(_roleSql);
-                stat.setString(1, key);
+                stat.setLong(1, key);
                 rs = stat.executeQuery();
                 List<String> roles = new ArrayList<String>();
                 while (rs.next()) {
