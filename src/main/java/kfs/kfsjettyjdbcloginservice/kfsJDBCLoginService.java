@@ -12,7 +12,6 @@ import java.util.Properties;
 import org.eclipse.jetty.security.IdentityService;
 import org.eclipse.jetty.security.JDBCLoginService;
 import org.eclipse.jetty.security.MappedLoginService;
-
 import org.eclipse.jetty.server.UserIdentity;
 import org.eclipse.jetty.util.Loader;
 import org.eclipse.jetty.util.log.Log;
@@ -24,9 +23,9 @@ import org.eclipse.jetty.util.security.Credential;
  * Hello world!
  *
  */
-public class kfsJDBCLoginService extends MappedLoginService {
+public final class kfsJDBCLoginService extends MappedLoginService {
 
-    private static final Logger LOG = Log.getLogger(JDBCLoginService.class);
+    private static final Logger LOG = Log.getLogger(kfsJDBCLoginService.class);
 
     private String _config;
     private String _jdbcDriver;
@@ -72,6 +71,7 @@ public class kfsJDBCLoginService extends MappedLoginService {
 
     /* ------------------------------------------------------------ */
     /**
+     * @throws java.lang.Exception
      * @see org.eclipse.jetty.security.MappedLoginService#doStart()
      */
     @Override
@@ -222,7 +222,7 @@ public class kfsJDBCLoginService extends MappedLoginService {
     private void closeConnection() {
         if (_con != null) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Closing db connection for JDBCUserRealm");
+                LOG.debug("Closing db connection for kfsJDBCUserRealm");
             }
             try {
                 _con.close();
