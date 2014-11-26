@@ -181,6 +181,7 @@ public final class kfsJDBCLoginService extends MappedLoginService {
     /* ------------------------------------------------------------ */
     @Override
     protected UserIdentity loadUser(String username) {
+        //LOG.debug("try to login " + username);
         try {
             if (null == _con) {
                 connectDatabase();
@@ -189,11 +190,10 @@ public final class kfsJDBCLoginService extends MappedLoginService {
             if (null == _con) {
                 throw new SQLException("Can't connect to database");
             }
-
+            //LOG.debug(_userSql);
             PreparedStatement stat = _con.prepareStatement(_userSql);
             stat.setObject(1, username);
             ResultSet rs = stat.executeQuery();
-
             if (rs.next()) {
                 long key = rs.getLong(_userTableKey);
                 String credentials = _userTablePasswordFieldPrefix + rs.getString(_userTablePasswordField);
@@ -206,7 +206,7 @@ public final class kfsJDBCLoginService extends MappedLoginService {
                 while (rs.next()) {
                     roles.add(rs.getString(_roleTableRoleField));
                 }
-
+                
                 stat.close();
                 return putUser(username, Credential.getCredential(credentials), roles.toArray(new String[roles.size()]));
             }
