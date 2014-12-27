@@ -212,6 +212,7 @@ public final class kfsJDBCLoginService extends MappedLoginService {
             }
         } catch (SQLException e) {
             LOG.warn("UserRealm " + getName() + " could not load user information from database", e);
+        } finally {
             closeConnection();
         }
         return null;
