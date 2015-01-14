@@ -113,6 +113,7 @@ public final class tomcatLikeJdbcLoginService extends MappedLoginService {
             throw new IllegalStateException("Running");
         }
         this.config = config;
+       LOG.info("set config: " + config, os);
     }
 
     public void connectDatabase() {
